@@ -15,10 +15,10 @@ module Api
       )
 
       if relationship.persisted?
-        render json: { status: "already_exists" }, status: :ok
+        render json: relationship, status: :ok
       else
         relationship.save!
-        render json: { status: "created", action_type: @action_type }, status: :created
+        render json: relationship, status: :created
       end
     end
 
@@ -30,7 +30,7 @@ module Api
       )
 
       if relationship&.destroy
-        render json: { status: "deleted", action_type: @action_type }, status: :ok
+        render json: relationship, status: :no_content
       else
         render json: { error: "Not found" }, status: :not_found
       end
