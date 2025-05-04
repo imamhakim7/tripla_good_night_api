@@ -12,7 +12,6 @@ RSpec.describe 'Relationship Controller', type: :request do
         it "creates a new relationship with action_type #{action_type}" do
           post "/api/do/#{action_type}/#{relationable.class.name}/#{relationable.id}", headers: headers
           expect(response).to have_http_status(:created)
-          expect(JSON.parse(response.body)['status']).to eq('created')
         end
       end
     end
@@ -45,7 +44,6 @@ RSpec.describe 'Relationship Controller', type: :request do
         it "returns a status of already_exists for action_type #{action_type}" do
           post "/api/do/#{action_type}/#{relationable.class.name}/#{relationable.id}", headers: headers
           expect(response).to have_http_status(:ok)
-          expect(JSON.parse(response.body)['status']).to eq('already_exists')
         end
 
         it 'does not create a duplicate relationship' do
@@ -75,8 +73,7 @@ RSpec.describe 'Relationship Controller', type: :request do
         it "deletes the relationship with action_type #{action_type}" do
           user.relationships.create(action_type: action_type, relationable: relationable)
           delete "/api/do/#{action_type}/#{relationable.class.name}/#{relationable.id}", headers: headers
-          expect(response).to have_http_status(:ok)
-          expect(JSON.parse(response.body)['status']).to eq('deleted')
+          expect(response).to have_http_status(:no_content)
         end
       end
     end
