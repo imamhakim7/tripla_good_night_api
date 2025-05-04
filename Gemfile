@@ -35,7 +35,7 @@ gem "thruster", require: false
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 # gem "rack-cors"
 gem "kaminari" # https://github.com/kaminari/kaminari
-gem 'active_model_serializers', '~> 0.10.2'
+gem "active_model_serializers", "~> 0.10.2"
 
 gem "bcrypt", "3.1.20" # https://github.com/bcrypt-ruby/bcrypt-ruby
 gem "jwt", "~> 2.10.1" # https://github.com/jwt/ruby-jwt
