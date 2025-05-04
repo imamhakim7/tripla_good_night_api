@@ -73,7 +73,7 @@ RSpec.describe 'Authentication Controller', type: :request do
       it 'returns unauthorized status' do
         post '/api/auth/refresh', headers: {}
         expect(response).to have_http_status(:unauthorized)
-        expect(JSON.parse(response.body)['error']).to eq('Not authorized')
+        expect(JSON.parse(response.body)['error']).to eq('Unauthorized')
       end
     end
   end

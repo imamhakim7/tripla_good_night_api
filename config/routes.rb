@@ -1,10 +1,20 @@
 Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   namespace :api, defaults: { format: :json } do
-    scope :auth, controller: :authentication do
+    scope :auth, controller: :authentication, defaults: { format: :json } do
       post :login
       post :refresh
       post :logout
+    end
+
+    scope :do, controller: :relationship, defaults: { format: :json } do
+      allowed_actions = /follow/
+      post   "/:action_type/:relationable_type/:relationable_id",
+             action: :create,
+             constraints: { action_type: allowed_actions }
+      delete "/:action_type/:relationable_type/:relationable_id",
+             action: :destroy,
+             constraints: { action_type: allowed_actions }
     end
   end
 

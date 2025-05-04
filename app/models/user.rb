@@ -3,4 +3,31 @@ class User < ApplicationRecord
 
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+
+  has_many :relationships, dependent: :destroy
+  has_many :followings, -> { where(action_type: "follow") }, class_name: "Relationship", foreign_key: "user_id"
+  has_many :followed_users, through: :followings, source: :relationable, source_type: "User"
+
+  def follow(user)
+      errors.add(:base, "You cannot follow yourself.") if relation_to_one_self?(user)
+      errors.add(:base, "You are already following this user.") if existing_relationship?(user)
+      return if errors.any?
+      relationships.create(relationable: user, action_type: "follow")
+  end
+
+  def unfollow(user)
+    errors.add(:base, "You are not following this user.") if !existing_relationship?(user)
+    return if errors.any?
+    relationships.find_by(relationable: user, action_type: "follow")&.destroy
+  end
+
+  private
+
+  def relation_to_one_self?(user)
+    self == user
+  end
+
+  def existing_relationship?(user)
+    relationships.exists?(relationable: user, action_type: "follow")
+  end
 end
