@@ -3,6 +3,10 @@ module Api
     before_action :set_relationable
     before_action :set_action_type
 
+    ALLOWED_RELATIONABLE_TYPES = {
+      "User" => User
+    }
+
     def create
       relationship = Relationship.find_or_initialize_by(
         user: @current_user,
@@ -35,8 +39,8 @@ module Api
     private
 
     def set_relationable
-      klass = params[:relationable_type].classify.safe_constantize
-      return render json: { error: "Invalid type" }, status: :bad_request unless klass
+      klass = ALLOWED_RELATIONABLE_TYPES[params[:relationable_type]]
+      return render json: { error: "Invalid relationable_type" }, status: :bad_request unless klass
 
       @relationable = klass.find_by(id: params[:relationable_id])
       render json: { error: "Not found" }, status: :not_found unless @relationable
