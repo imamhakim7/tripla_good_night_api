@@ -3,8 +3,11 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   describe 'associations' do
     it { should have_many(:relationships).dependent(:destroy) }
-    it { should have_many(:followings).class_name('Relationship').with_foreign_key('user_id') }
-    it { should have_many(:followed_users).through(:followings).source(:relationable).class_name('User') }
+
+    it { should have_many(:follower_relations).class_name('Relationship') }
+    it { should have_many(:followers).through(:follower_relations).source(:user) }
+    it { should have_many(:following_relations).class_name('Relationship').with_foreign_key('user_id') }
+    it { should have_many(:followings).through(:following_relations).source(:relationable).class_name('User') }
   end
 
   describe 'validations' do
@@ -51,7 +54,7 @@ RSpec.describe User, type: :model do
 
     it 'follows another user' do
       expect { user.follow(other_user) }.to change { user.followings.count }.by(1)
-      expect(user.followed_users).to include(other_user)
+      expect(user.followings).to include(other_user)
     end
 
     it 'does not follow the same user multiple times' do
@@ -75,12 +78,47 @@ RSpec.describe User, type: :model do
 
     it 'unfollows another user' do
       expect { user.unfollow(other_user) }.to change { user.followings.count }.by(-1)
-      expect(user.followed_users).not_to include(other_user)
+      expect(user.followings).not_to include(other_user)
     end
 
     it 'does not raise an error if not following the user' do
       expect { user.unfollow(create(:user)) }.not_to raise_error
       expect(user.errors[:base]).to include('You are not following this user.')
+    end
+  end
+
+  describe '#followers' do
+    let(:user) { create(:user) }
+    let(:follower) { create(:user) }
+
+    before do
+      user.follow(follower)
+      follower.follow(user)
+    end
+
+    it 'returns the followers of the user' do
+      expect(user.followers).to include(follower)
+    end
+
+    it 'does not include users who are not followers' do
+      other_user = create(:user)
+      expect(user.followers).not_to include(other_user)
+    end
+  end
+
+  describe '#followings' do
+    let(:user) { create(:user) }
+    let(:following) { create(:user) }
+
+    before { user.follow(following) }
+
+    it 'returns the users that the user is following' do
+      expect(user.followings).to include(following)
+    end
+
+    it 'does not include users who are not being followed' do
+      other_user = create(:user)
+      expect(user.followings).not_to include(other_user)
     end
   end
 end

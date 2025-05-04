@@ -16,6 +16,18 @@ Rails.application.routes.draw do
              action: :destroy,
              constraints: { action_type: allowed_actions }
     end
+
+    scope :my, controller: :user, defaults: { format: :json } do
+      get :profile
+      get :followers
+      get :followings
+    end
+
+    scope :users, controller: :user, defaults: { format: :json } do
+      get ":id", action: :show, constraints: { id: /\d+/ }
+      get ":id/followers", action: :user_followers, constraints: { id: /\d+/ }
+      get ":id/followings", action: :user_followings, constraints: { id: /\d+/ }
+    end
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

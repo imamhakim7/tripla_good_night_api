@@ -1,10 +1,6 @@
 module AuthenticableSupport
-  def get_bearer_for(user)
+  def authenticated_header(user)
     payload = { id: user.id, email: user.email }
-    AuthorizeApiRequest.encoded_auth_token(payload, expires_in: 1.hours.from_now)
+    { 'Authorization' => "Bearer #{AuthorizeApiRequest.encoded_auth_token(payload, expires_in: 1.hours.from_now)}" }
   end
-end
-
-RSpec.configure do |config|
-  config.include AuthenticableSupport
 end

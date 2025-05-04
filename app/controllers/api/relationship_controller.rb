@@ -4,7 +4,7 @@ module Api
     before_action :set_action_type
 
     ALLOWED_RELATIONABLE_TYPES = {
-      "User" => User
+      "user" => User
     }
 
     def create
@@ -39,7 +39,7 @@ module Api
     private
 
     def set_relationable
-      klass = ALLOWED_RELATIONABLE_TYPES[params[:relationable_type]]
+      klass = ALLOWED_RELATIONABLE_TYPES[params[:relationable_type].to_s.downcase]
       return render json: { error: "Invalid relationable_type" }, status: :bad_request unless klass
 
       @relationable = klass.find_by(id: params[:relationable_id])

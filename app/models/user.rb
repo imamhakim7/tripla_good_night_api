@@ -5,8 +5,12 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
 
   has_many :relationships, dependent: :destroy
-  has_many :followings, -> { where(action_type: "follow") }, class_name: "Relationship", foreign_key: "user_id"
-  has_many :followed_users, through: :followings, source: :relationable, source_type: "User"
+
+  has_many :following_relations, -> { where(action_type: :follow) }, class_name: "Relationship", foreign_key: "user_id"
+  has_many :followings, through: :following_relations, source: :relationable, source_type: "User"
+
+  has_many :follower_relations, -> { where(action_type: :follow) }, class_name: "Relationship", as: :relationable
+  has_many :followers, through: :follower_relations, source: :user
 
   def follow(user)
       errors.add(:base, "You cannot follow yourself.") if relation_to_one_self?(user)
