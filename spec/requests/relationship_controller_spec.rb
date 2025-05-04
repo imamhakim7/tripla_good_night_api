@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Relationship Controller', type: :request do
   let(:user) { create(:user) }
-  let(:headers) { { 'Authorization' => "Bearer #{get_bearer_for(user)}" } }
+  let(:headers) { authenticated_header(user) }
 
   describe 'POST /api/do' do
     let(:relationable) { create(:user) }
@@ -10,7 +10,7 @@ RSpec.describe 'Relationship Controller', type: :request do
     context 'with valid relationable' do
       [ 'follow' ].each do |action_type|
         it "creates a new relationship with action_type #{action_type}" do
-          post "/api/do/#{action_type}/#{relationable.class.name.downcase}/#{relationable.id}", headers: headers
+          post "/api/do/#{action_type}/#{relationable.class.name}/#{relationable.id}", headers: headers
           expect(response).to have_http_status(:created)
           expect(JSON.parse(response.body)['status']).to eq('created')
         end
@@ -25,7 +25,7 @@ RSpec.describe 'Relationship Controller', type: :request do
         end
 
         it "returns an error when relationable_id is missing" do
-          post "/api/do/#{action_type}/#{relationable.class.name.downcase}", headers: headers
+          post "/api/do/#{action_type}/#{relationable.class.name}", headers: headers
           expect(response).to have_http_status(:not_found)
         end
 
@@ -43,14 +43,14 @@ RSpec.describe 'Relationship Controller', type: :request do
         end
 
         it "returns a status of already_exists for action_type #{action_type}" do
-          post "/api/do/#{action_type}/#{relationable.class.name.downcase}/#{relationable.id}", headers: headers
+          post "/api/do/#{action_type}/#{relationable.class.name}/#{relationable.id}", headers: headers
           expect(response).to have_http_status(:ok)
           expect(JSON.parse(response.body)['status']).to eq('already_exists')
         end
 
         it 'does not create a duplicate relationship' do
           expect {
-            post "/api/do/#{action_type}/#{relationable.class.name.downcase}/#{relationable.id}", headers: headers
+            post "/api/do/#{action_type}/#{relationable.class.name}/#{relationable.id}", headers: headers
           }.not_to change(Relationship, :count)
         end
       end
@@ -59,7 +59,7 @@ RSpec.describe 'Relationship Controller', type: :request do
     context 'when the user is not authenticated' do
       [ 'follow' ].each do |action_type|
         it "returns an unauthorized status for action_type #{action_type}" do
-          post "/api/do/#{action_type}/#{relationable.class.name.downcase}/#{relationable.id}"
+          post "/api/do/#{action_type}/#{relationable.class.name}/#{relationable.id}"
           expect(response).to have_http_status(:unauthorized)
           expect(JSON.parse(response.body)['error']).to eq('Unauthorized')
         end
@@ -74,7 +74,7 @@ RSpec.describe 'Relationship Controller', type: :request do
       [ 'follow' ].each do |action_type|
         it "deletes the relationship with action_type #{action_type}" do
           user.relationships.create(action_type: action_type, relationable: relationable)
-          delete "/api/do/#{action_type}/#{relationable.class.name.downcase}/#{relationable.id}", headers: headers
+          delete "/api/do/#{action_type}/#{relationable.class.name}/#{relationable.id}", headers: headers
           expect(response).to have_http_status(:ok)
           expect(JSON.parse(response.body)['status']).to eq('deleted')
         end
@@ -89,7 +89,7 @@ RSpec.describe 'Relationship Controller', type: :request do
         end
 
         it "returns an error when relationable_id is missing" do
-          delete "/api/do/#{action_type}/#{relationable.class.name.downcase}", headers: headers
+          delete "/api/do/#{action_type}/#{relationable.class.name}", headers: headers
           expect(response).to have_http_status(:not_found)
         end
 
@@ -103,13 +103,13 @@ RSpec.describe 'Relationship Controller', type: :request do
     context 'when the relationship does not exist' do
       [ 'follow' ].each do |action_type|
         it "returns a status of not_found for action_type #{action_type}" do
-          delete "/api/do/#{action_type}/#{relationable.class.name.downcase}/#{relationable.id}", headers: headers
+          delete "/api/do/#{action_type}/#{relationable.class.name}/#{relationable.id}", headers: headers
           expect(response).to have_http_status(:not_found)
         end
 
         it 'does not change the relationship count' do
           expect {
-            delete "/api/do/#{action_type}/#{relationable.class.name.downcase}/#{relationable.id}", headers: headers
+            delete "/api/do/#{action_type}/#{relationable.class.name}/#{relationable.id}", headers: headers
           }.not_to change(Relationship, :count)
         end
       end
@@ -118,7 +118,7 @@ RSpec.describe 'Relationship Controller', type: :request do
     context 'when the user is not authenticated' do
       [ 'follow' ].each do |action_type|
         it "returns an unauthorized status for action_type #{action_type}" do
-          delete "/api/do/#{action_type}/#{relationable.class.name.downcase}/#{relationable.id}"
+          delete "/api/do/#{action_type}/#{relationable.class.name}/#{relationable.id}"
           expect(response).to have_http_status(:unauthorized)
           expect(JSON.parse(response.body)['error']).to eq('Unauthorized')
         end
