@@ -54,6 +54,7 @@ group :development, :test do
 
   # Testing framework
   gem "rspec-rails", "~> 8.0.0" # https://github.com/rspec/rspec-rails
+  gem "shoulda-matchers", "~> 6.0" # https://github.com/thoughtbot/shoulda-matchers
   gem "factory_bot_rails" # https://github.com/thoughtbot/factory_bot_rails
   gem "faker" # https://github.com/faker-ruby/faker
 

@@ -36,6 +36,6 @@ module Authenticable
   end
 
   def handle_not_authorized
-    render json: { error: "Not authorized" }, status: :unauthorized
+    render json: { error: "Unauthorized" }, status: :unauthorized
   end
 end
