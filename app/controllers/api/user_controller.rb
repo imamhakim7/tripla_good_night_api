@@ -1,10 +1,6 @@
 module Api
   class UserController < ApplicationController
-    before_action :set_user, only: [ :show, :user_followers, :user_followings ]
-
-    def show
-      render json: @user, status: :ok
-    end
+    before_action :set_user, only: [ :user_profile, :user_followers, :user_followings ]
 
     def profile
       render json: @current_user, status: :ok
@@ -18,6 +14,10 @@ module Api
     def followings
       @followings = @current_user.followings
       render_users @followings
+    end
+
+    def user_profile
+      render json: @user, status: :ok
     end
 
     def user_followers

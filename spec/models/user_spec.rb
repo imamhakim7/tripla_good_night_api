@@ -43,7 +43,7 @@ RSpec.describe User, type: :model do
 
     it 'has a secure password' do
       user = create :user, password: 'password123'
-      expect(user.authenticate('password123')).to eq(user)
+      expect(user.authenticate('password123')).to eq user
       expect(user.authenticate('wrong_password')).to be_falsey
     end
   end

@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe 'Relationship Controller', type: :request do
+RSpec.describe 'Api::RelationshipController', type: :request do
   let(:user) { create(:user) }
   let(:headers) { authenticated_header(user) }
 
-  describe 'POST /api/do' do
+  describe 'POST /api/do/:action_type/:relationable_type/:relationable_id' do
     let(:relationable) { create(:user) }
 
     context 'with valid relationable' do
@@ -59,13 +59,13 @@ RSpec.describe 'Relationship Controller', type: :request do
         it "returns an unauthorized status for action_type #{action_type}" do
           post "/api/do/#{action_type}/#{relationable.class.name}/#{relationable.id}"
           expect(response).to have_http_status(:unauthorized)
-          expect(JSON.parse(response.body)['error']).to eq('Unauthorized')
+          expect(JSON.parse(response.body)['error']).to eq 'Unauthorized'
         end
       end
     end
   end
 
-  describe 'DELETE /api/do' do
+  describe 'DELETE /api/do/:action_type/:relationable_type/:relationable_id' do
     let(:relationable) { create(:user) }
 
     context 'with valid relationable' do
@@ -117,7 +117,7 @@ RSpec.describe 'Relationship Controller', type: :request do
         it "returns an unauthorized status for action_type #{action_type}" do
           delete "/api/do/#{action_type}/#{relationable.class.name}/#{relationable.id}"
           expect(response).to have_http_status(:unauthorized)
-          expect(JSON.parse(response.body)['error']).to eq('Unauthorized')
+          expect(JSON.parse(response.body)['error']).to eq 'Unauthorized'
         end
       end
     end

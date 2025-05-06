@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "User Controller", type: :request do
+RSpec.describe "Api::UserController", type: :request do
   let(:user) { create :user }
   let(:other_user) { create :user }
   let(:headers) { authenticated_header(user) }

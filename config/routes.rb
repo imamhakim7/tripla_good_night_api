@@ -17,17 +17,31 @@ Rails.application.routes.draw do
              constraints: { action_type: allowed_actions }
     end
 
-    scope :my, controller: :user, defaults: { format: :json } do
-      get :profile
-      get :followers
-      get :followings
+    activity_types = /sleep|work|exercise/
+    scope :my, defaults: { format: :json } do
+      get "/profile", to: "user#profile"
+      get "/followers", to: "user#followers"
+      get "/followings", to: "user#followings"
+      get "/activities/:activity_type", to: "activity_session#my_sessions", constraints: { activity_type: activity_types }
+      get "/followings/activities/:activity_type", to: "activity_session#my_followings_sessions", constraints: { activity_type: activity_types }
+      get "/followers/activities/:activity_type", to: "activity_session#my_followers_sessions", constraints: { activity_type: activity_types }
     end
 
-    scope :users, controller: :user, defaults: { format: :json } do
-      get ":id", action: :show, constraints: { id: /\d+/ }
-      get ":id/followers", action: :user_followers, constraints: { id: /\d+/ }
-      get ":id/followings", action: :user_followings, constraints: { id: /\d+/ }
+    scope :users, defaults: { format: :json } do
+      get "/:id", to: "user#user_profile", constraints: { id: /\d+/ }
+      get "/:id/followers", to: "user#user_followers", constraints: { id: /\d+/ }
+      get "/:id/followings", to: "user#user_followings", constraints: { id: /\d+/ }
+      get "/:id/activities/:activity_type", to: "activity_session#user_sessions", constraints: { activity_type: activity_types, id: /\d+/ }
+      get "/:id/followers/activities/:activity_type", to: "activity_session#user_followers_sessions", constraints: { activity_type: activity_types, id: /\d+/ }
+      get "/:id/followings/activities/:activity_type", to: "activity_session#user_followings_sessions", constraints: { activity_type: activity_types, id: /\d+/ }
     end
+
+    scope :act, controller: :activity_session, defaults: { format: :json } do
+      post "/:activity_type/clock_in", action: :clock_in, constraints: { activity_type: activity_types }
+      patch "/:activity_type/clock_out", action: :clock_out, constraints: { activity_type: activity_types }
+    end
+
+    patch "/clock_out/:id", to: "activity_session#clock_out_by_id", defaults: { format: :json }, constraints: { id: /\d+/ }
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

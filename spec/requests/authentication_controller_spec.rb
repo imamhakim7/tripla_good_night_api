@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Authentication Controller', type: :request do
+RSpec.describe 'Api::AuthenticationController', type: :request do
   describe 'POST /api/auth/login' do
     let(:user) { create :user }
     let(:valid_credentials) { { email: user.email, password: user.password } }
@@ -17,19 +17,19 @@ RSpec.describe 'Authentication Controller', type: :request do
       it 'returns unauthorized status with invalid email' do
         post '/api/auth/login', params: { email: 'wrong@example.com', password: 'password123' }
         expect(response).to have_http_status(:unauthorized)
-        expect(JSON.parse(response.body)['error']).to eq('Invalid credentials')
+        expect(JSON.parse(response.body)['error']).to eq 'Invalid credentials'
       end
 
       it 'returns unauthorized status with invalid password' do
         post '/api/auth/login', params: { email: 'test@example.com', password: 'wrong_password' }
         expect(response).to have_http_status(:unauthorized)
-        expect(JSON.parse(response.body)['error']).to eq('Invalid credentials')
+        expect(JSON.parse(response.body)['error']).to eq 'Invalid credentials'
       end
 
       it 'returns unauthorized status with blank password' do
         post '/api/auth/login', params: { email: 'test@example.com', password: '' }
         expect(response).to have_http_status(:unauthorized)
-        expect(JSON.parse(response.body)['error']).to eq('Invalid credentials')
+        expect(JSON.parse(response.body)['error']).to eq 'Invalid credentials'
       end
     end
   end
@@ -57,7 +57,7 @@ RSpec.describe 'Authentication Controller', type: :request do
 
         post '/api/auth/refresh', headers: { 'Authorization' => "Bearer #{refresh_token}" }
         expect(response).to have_http_status(:unauthorized)
-        expect(JSON.parse(response.body)['error']).to eq('Token has expired')
+        expect(JSON.parse(response.body)['error']).to eq 'Token has expired'
       end
     end
 
@@ -65,7 +65,7 @@ RSpec.describe 'Authentication Controller', type: :request do
       it 'returns invalid token status' do
         post '/api/auth/refresh', headers: { 'Authorization' => 'Bearer invalid_token' }
         expect(response).to have_http_status(:unauthorized)
-        expect(JSON.parse(response.body)['error']).to eq('Invalid token')
+        expect(JSON.parse(response.body)['error']).to eq 'Invalid token'
       end
     end
 
@@ -73,7 +73,7 @@ RSpec.describe 'Authentication Controller', type: :request do
       it 'returns unauthorized status' do
         post '/api/auth/refresh', headers: {}
         expect(response).to have_http_status(:unauthorized)
-        expect(JSON.parse(response.body)['error']).to eq('Unauthorized')
+        expect(JSON.parse(response.body)['error']).to eq 'Unauthorized'
       end
     end
   end
@@ -89,7 +89,7 @@ RSpec.describe 'Authentication Controller', type: :request do
 
         post '/api/auth/logout', headers: { 'Authorization' => "Bearer #{refresh_token}" }
         expect(response).to have_http_status(:ok)
-        expect(JSON.parse(response.body)['message']).to eq('Logged out successfully')
+        expect(JSON.parse(response.body)['message']).to eq 'Logged out successfully'
         expect(user.reload.refresh_token).to be_nil
       end
     end

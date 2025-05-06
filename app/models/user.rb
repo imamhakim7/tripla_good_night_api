@@ -5,6 +5,7 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
 
   has_many :relationships, dependent: :destroy
+  has_many :activity_sessions, dependent: :destroy
 
   has_many :following_relations, -> { where(action_type: :follow) }, class_name: "Relationship", foreign_key: "user_id"
   has_many :followings, through: :following_relations, source: :relationable, source_type: "User"

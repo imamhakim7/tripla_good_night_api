@@ -11,7 +11,7 @@ class AuthorizeApiRequest
 
   def self.encoded_auth_token(payload, expires_in: 24.hours.from_now)
     payload[:exp] = expires_in.to_i
-    payload[:iat] = Time.now.to_i
+    payload[:iat] = Time.current.to_i
     JWT.encode(payload, Rails.application.credentials.secret_key_base)
   end
 
