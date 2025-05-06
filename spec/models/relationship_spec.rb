@@ -8,7 +8,7 @@ RSpec.describe Relationship, type: :model do
 
   describe 'validations' do
     it { should validate_presence_of(:action_type) }
-    it { should validate_inclusion_of(:action_type).in_array(Relationship::ALLOWED_ACTIONS) }
+    it { should validate_inclusion_of(:action_type).in_array(Relationship::ALLOWED_ACTION_TYPES) }
     it { should validate_presence_of(:user) }
     it { should validate_presence_of(:relationable) }
   end

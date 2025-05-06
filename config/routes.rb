@@ -17,16 +17,16 @@ Rails.application.routes.draw do
              constraints: { action_type: allowed_actions }
     end
 
-    scope :my, controller: :user, defaults: { format: :json } do
-      get :profile
-      get :followers
-      get :followings
+    scope :my, defaults: { format: :json } do
+      get "/profile", to: "user#profile"
+      get "/followers", to: "user#followers"
+      get "/followings", to: "user#followings"
     end
 
-    scope :users, controller: :user, defaults: { format: :json } do
-      get ":id", action: :show, constraints: { id: /\d+/ }
-      get ":id/followers", action: :user_followers, constraints: { id: /\d+/ }
-      get ":id/followings", action: :user_followings, constraints: { id: /\d+/ }
+    scope :users, defaults: { format: :json } do
+      get "/:id", to: "user#user_profile", constraints: { id: /\d+/ }
+      get "/:id/followers", to: "user#user_followers", constraints: { id: /\d+/ }
+      get "/:id/followings", to: "user#user_followings", constraints: { id: /\d+/ }
     end
   end
 
