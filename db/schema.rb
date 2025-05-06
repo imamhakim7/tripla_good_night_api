@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_04_000832) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_04_125749) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "activity_sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "activity_type"
+    t.datetime "clock_in"
+    t.datetime "clock_out"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_activity_sessions_on_user_id"
+  end
 
   create_table "relationships", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -35,5 +45,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_04_000832) do
     t.index ["email"], name: "index_users_on_email"
   end
 
+  add_foreign_key "activity_sessions", "users"
   add_foreign_key "relationships", "users"
 end
