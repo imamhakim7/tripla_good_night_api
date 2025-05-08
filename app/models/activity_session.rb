@@ -9,7 +9,7 @@ class ActivitySession < ApplicationRecord
 
   validate :clock_out_after_clock_in
 
-  scope :incomplete, -> { where(clock_in: nil).or(where(clock_out: nil)) }
+  scope :ongoing, -> { where(clock_out: nil) }
   scope :finished, -> { where("clock_in is not null and clock_out is not null") }
 
   scope :from_last_week, -> { where("clock_in >= ?", 1.week.ago) }

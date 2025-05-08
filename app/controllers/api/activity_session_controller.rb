@@ -84,11 +84,15 @@ module Api
 
     def get_activity_sessions(user_ids)
       filter_ongoing = ActiveModel::Type::Boolean.new.cast(params[:ongoing]) if params[:ongoing].present?
+      filter_finished = ActiveModel::Type::Boolean.new.cast(params[:finished]) if params[:finished].present?
+      filter_from_last_week = ActiveModel::Type::Boolean.new.cast(params[:from_last_week]) if params[:from_last_week].present?
       records = ActivitySession.where(
         user_id: user_ids,
         activity_type: @activity_type,
       )
-      records = records.where(clock_out: nil) if filter_ongoing
+      records = records.ongoing if filter_ongoing
+      records = records.finished if filter_finished
+      records = records.from_last_week if filter_from_last_week
       records = records.order(created_at: :desc)
       records.includes(:user)
     end

@@ -40,11 +40,11 @@ RSpec.describe ActivitySession, type: :model do
     let!(:activity_session2) { create :activity_session, user: user, clock_in: 5.days.ago, clock_out: 1.day.ago }
     let!(:activity_session3) { create :activity_session, user: user, clock_in: 2.weeks.ago, clock_out: 2.days.ago }
 
-    describe ".incomplete" do
+    describe ".ongoing" do
       it "returns sessions with nil clock_in or clock_out" do
-        expect(ActivitySession.incomplete).to include(activity_session1)
-        expect(ActivitySession.incomplete).not_to include(activity_session2)
-        expect(ActivitySession.incomplete).not_to include(activity_session3)
+        expect(ActivitySession.ongoing).to include(activity_session1)
+        expect(ActivitySession.ongoing).not_to include(activity_session2)
+        expect(ActivitySession.ongoing).not_to include(activity_session3)
       end
     end
 
