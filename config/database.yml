@@ -87,6 +87,8 @@ production:
     database: tripla_good_night_api_production
     username: <%= ENV.fetch("POSTGRES_USER") { 'postgres' } %>
     password: <%= ENV.fetch("POSTGRES_PASSWORD") { 'password' } %>
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } * ENV.fetch("WEB_CONCURRENCY") { 4 } %>
+    timeout: 5000
   cache:
     <<: *primary_production
     database: tripla_good_night_api_production_cache

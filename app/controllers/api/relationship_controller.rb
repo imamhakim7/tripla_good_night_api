@@ -1,5 +1,7 @@
 module Api
   class RelationshipController < ApplicationController
+    include UserRelationshipCacheable
+
     before_action :set_relationable
     before_action :set_action_type
 
@@ -14,6 +16,7 @@ module Api
         render json: relationship, status: :ok
       else
         relationship.save!
+        invalidate_relationship_cache_if_needed(@action_type, @current_user, @relationable)
         render json: relationship, status: :created
       end
     end
@@ -26,6 +29,7 @@ module Api
       )
 
       if relationship&.destroy
+        invalidate_relationship_cache_if_needed(@action_type, @current_user, @relationable)
         render json: relationship, status: :no_content
       else
         render json: { error: "Not found" }, status: :not_found

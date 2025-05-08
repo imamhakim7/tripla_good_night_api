@@ -15,6 +15,12 @@ gem "puma", ">= 5.0"
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
+# Use Redis for caching
+gem "redis", "~> 5.4"
+
+# Use for Rack middleware to throttle requests and block abusive clients
+gem "rack-attack", "~> 6.7" # https://github.com/rack/rack-attack
+
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
 gem "solid_cache"
 gem "solid_queue"
@@ -62,7 +68,6 @@ group :development, :test do
 
   # https://github.com/DatabaseCleaner/database_cleaner
   gem "database_cleaner-active_record", "~> 2.2.0"
-  # gem "database_cleaner-redis", "~> 2.0.0"
 
   gem "dotenv", "3.1.8" # https://github.com/bkeepers/dotenv
 end

@@ -13,5 +13,18 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
 volumes:
   postgres_data:
+  redis_data:
