@@ -2,16 +2,18 @@
 
 A scalable RESTful API built with Ruby on Rails to track users' sleep activities — when they go to bed (clock in) and when they wake up (clock out).
 
-Task: [BE interview homework_v2.pdf](./BE interview homework_v2.pdf)
+Task: [BE interview homework_v2.pdf](https://github.com/imamhakim7/tripla_good_night_api/blob/b7049f73470f7766118cb7d7c14b8ec8099b6e4a/BE%20interview%20homework_v2.pdf)
 
 ## ✨ Features
 
 - Follow and unfollow other users.
+  
   `follow` is the `action_type` to relationable (other users) of relationships,
   so for further features we can scale to another action_type to the relationable
   e.g. - `star` to relationable users - `like` to relationable posts, activity_sessions, e.t.v
 - Users can clock in and out for sleep.
 - View personal sleep records sorted by time.
+  
   `sleep` is the activity_type of the activity_sessions,
   so for further features we can scale to another activity_type, e.g. `workout`, `cycling`, `study`
 - View friends’ sleep records from the previous week, sorted by duration.
@@ -68,7 +70,7 @@ spec/
 
 ### 1. Authentication
 
-```http
+```
 POST  /api/login -> login by email and password
 POST  /api/refresh -> refresh access_token
 GET   /api/logout
@@ -76,7 +78,7 @@ GET   /api/logout
 
 ### 2. Follow / Unfollow
 
-```http
+```
 action_type = /follow/
 relationable_type = \user\
 
@@ -88,7 +90,7 @@ DELETE  /api/do/:action_type/:relationable_type:user_id
 
 ### 3. Clock-In and Clock-Out
 
-```http
+```
 activity_type = /sleep/
 
 POST   /api/act/:activity_type/clock_in -> return activity_session_id
@@ -100,7 +102,7 @@ PATCH  /clock_out/:id -> clock_out by activity_session_id
 
 ### 4. User Data
 
-```http
+```
 activity_type = /sleep/
 
 GET  /api/my/profile -> fetch user profile data
@@ -119,7 +121,7 @@ GET  /api/my/followings/activities/:activity_type -> fetch user followings activ
 
 ### 4. Other User Data
 
-```http
+```
 activity_type = /sleep/
 
 GET  /api/users/:id/profile -> fetch other user profile data
@@ -150,8 +152,8 @@ bundle exec rspec
 ## 🚀 Quick Start
 
 ```bash
-git clone https://github.com/your-repo/good-night-api.git
-cd good-night-api
+git clone https://github.com/imamhakim7/tripla_good_night_api
+cd tripla_good_night_api
 bundle install
 rails db:create db:migrate
 rails s

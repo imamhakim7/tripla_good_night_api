@@ -52,9 +52,9 @@ module UserRelationshipCacheable
 
   included do
     ACTION_TYPE_INVALIDATORS = {
-      "follow" => ->(current_user, target_user) do
-        invalidate_relationship_cache_for(current_user)
-        invalidate_relationship_cache_for(target_user)
+      "follow" => ->(current_user, target_user, controller_instance) do
+        controller_instance.invalidate_relationship_cache_for(current_user)
+        controller_instance.invalidate_relationship_cache_for(target_user)
       end
     }.freeze
   end
@@ -78,10 +78,9 @@ module UserRelationshipCacheable
 
   def invalidate_relationship_cache_if_needed(action_type, current_user, relationable)
     invalidator = self.class::ACTION_TYPE_INVALIDATORS[action_type]
-    invalidator&.call(current_user, relationable)
+    invalidator&.call(current_user, relationable, self)
   end
 end
-
 ```
 
 ### ✅ Memoization
@@ -194,7 +193,9 @@ Rack::Attack.cache.store = ActiveSupport::Cache::RedisCacheStore.new(url: ENV["R
 
 Move long-running tasks out of request cycle.
 
-### ✅ Job [Not Implemented Yet] TODO: Create Job to Analytics Table or DB Analize Users ActivitySession Behaviour
+### ✅ Job [Not Implemented Yet]
+
+TODO: Create Job to Analytics Table or DB Analize Users ActivitySession Behaviour
 
 ```ruby
 class ActivityLogJob < ApplicationJob
