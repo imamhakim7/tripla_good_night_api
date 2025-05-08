@@ -44,10 +44,12 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
+    Redis.new.flushdb
   end
 
   config.before(:each) do
     DatabaseCleaner.strategy = :transaction
+    Redis.new.flushdb
   end
 
   config.before(:each, type: :feature) do
@@ -63,13 +65,16 @@ RSpec.configure do |config|
       # connection with the specs, so we must use truncation strategy.
       DatabaseCleaner.strategy = :truncation
     end
+    Redis.new.flushdb
   end
 
   config.before(:each) do
     DatabaseCleaner.start
+    Redis.new.flushdb
   end
 
   config.after(:each) do
     DatabaseCleaner.clean
+    Redis.new.flushdb
   end
 end

@@ -157,10 +157,6 @@ rails db:create db:migrate
 rails s
 ```
 
-## TODO:
-
-### 📄 Api Documentations: ???
-
 ### ⚙️ Scalability
 
 See [`SCALING.md`](./SCALING.md) for detailed strategies on performance and scaling:
@@ -170,4 +166,8 @@ See [`SCALING.md`](./SCALING.md) for detailed strategies on performance and scal
 - API pagination & filtering
 - Puma concurrency & Docker
 - JWT security & rate limiting
-- Background jobs
+- Background jobs --> Not yet needed
+
+## TODO:
+
+### 📄 Api Documentations: ???

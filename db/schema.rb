@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_04_125749) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_08_071640) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -21,6 +21,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_04_125749) do
     t.datetime "clock_out"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id", "activity_type"], name: "index_activity_sessions_on_user_and_type"
+    t.index ["user_id", "clock_in", "clock_out"], name: "index_activity_sessions_on_user_and_times"
     t.index ["user_id"], name: "index_activity_sessions_on_user_id"
   end
 
@@ -32,6 +34,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_04_125749) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["relationable_type", "relationable_id"], name: "index_relationships_on_relationable"
+    t.index ["user_id", "action_type"], name: "index_relationships_on_user_and_action_type"
+    t.index ["user_id", "relationable_type", "relationable_id"], name: "index_relationships_on_user_and_relationable"
     t.index ["user_id"], name: "index_relationships_on_user_id"
   end
 
@@ -43,6 +47,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_04_125749) do
     t.datetime "updated_at", null: false
     t.string "refresh_token"
     t.index ["email"], name: "index_users_on_email"
+    t.index ["refresh_token"], name: "index_users_on_refresh_token"
   end
 
   add_foreign_key "activity_sessions", "users"

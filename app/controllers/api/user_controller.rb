@@ -1,5 +1,7 @@
 module Api
   class UserController < ApplicationController
+    include UserRelationshipCacheable
+
     before_action :set_user, only: [ :user_profile, :user_followers, :user_followings ]
 
     def profile
@@ -7,13 +9,13 @@ module Api
     end
 
     def followers
-      @followers = @current_user.followers
-      render_users @followers
+      user_ids = fetch_cached_follower_ids(@current_user)
+      render_users(get_users_by_ids(user_ids))
     end
 
     def followings
-      @followings = @current_user.followings
-      render_users @followings
+      user_ids = fetch_cached_following_ids(@current_user)
+      render_users(get_users_by_ids(user_ids))
     end
 
     def user_profile
@@ -38,8 +40,12 @@ module Api
       render json: { error: e.message }, status: :not_found
     end
 
+    def get_users_by_ids(user_ids)
+      User.where(id: user_ids).order(id: :desc)
+    end
+
     def render_users(users)
-      @paginated = users.page(params[:page]).per(params[:per_page] || 10)
+      @paginated = users.page(params[:page] || 1).per(params[:per_page] || 10)
       render json: @paginated, status: :ok
     end
   end

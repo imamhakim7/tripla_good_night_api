@@ -25,7 +25,7 @@ module Api
 
     def logout
       if @current_user
-        @current_user.update(refresh_token: nil)
+        @current_user.transaction { @current_user.update!(refresh_token: nil) }
         render json: { message: "Logged out successfully" }, status: :ok
       end
     end
