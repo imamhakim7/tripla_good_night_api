@@ -170,4 +170,7 @@ See [`SCALING.md`](./SCALING.md) for detailed strategies on performance and scal
 
 ## TODO:
 
-### 📄 Api Documentations: ???
+### 📄 Api Documentations: See this!
+
+- https://github.com/rswag/rswag
+- https://github.com/Apipie/apipie-rails
