@@ -17,7 +17,7 @@ Rails.application.routes.draw do
              constraints: { action_type: allowed_actions }
     end
 
-    activity_types = /sleep|work|exercise/
+    activity_types = /sleep/
     scope :my, defaults: { format: :json } do
       get "/profile", to: "user#profile"
       get "/followers", to: "user#followers"
