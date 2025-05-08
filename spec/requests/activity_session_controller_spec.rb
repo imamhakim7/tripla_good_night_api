@@ -64,21 +64,49 @@ RSpec.describe "Api::ActivitySessionController", type: :request do
   describe "GET /api/my/activities/:activity_type" do
     [ 'sleep' ].each do |activity_type|
       it "gets current_user sessions for #{activity_type}" do
+        create :activity_session, user: user, activity_type: activity_type, clock_in: Time.current, clock_out: nil
         create :activity_session, user: user, activity_type: activity_type
         get "/api/my/activities/#{activity_type}", headers: headers
 
         expect(response).to have_http_status(:ok)
         expect(json["data"]).to be_an(Array)
+        expect(json["data"].size).to eq 2
       end
 
       context "ongoing sessions" do
         it "returns ongoing sessions" do
           create :activity_session, user: user, activity_type: activity_type, clock_in: Time.current, clock_out: nil
-          get "/api/my/activities/#{activity_type}", headers: headers
+          create :activity_session, user: user, activity_type: activity_type, clock_in: 1.hour.ago, clock_out: Time.current
+          get "/api/my/activities/#{activity_type}?ongoing=true", headers: headers
 
           expect(response).to have_http_status(:ok)
           expect(json["data"]).to be_an(Array)
+          expect(json["data"].size).to eq 1
           expect(json["data"].first["attributes"]["clock-out"]).to be_nil
+        end
+      end
+
+      context "finished sessions" do
+        it "returns finished sessions" do
+          create :activity_session, user: user, activity_type: activity_type, clock_in: Time.current, clock_out: nil
+          create :activity_session, user: user, activity_type: activity_type, clock_in: 1.hour.ago, clock_out: Time.current
+          get "/api/my/activities/#{activity_type}?finished=1", headers: headers
+
+          expect(response).to have_http_status(:ok)
+          expect(json["data"]).to be_an(Array)
+          expect(json["data"].size).to eq 1
+          expect(json["data"].first["attributes"]["clock-out"]).not_to be_nil
+        end
+
+        it "returns sessions from the last week" do
+          create :activity_session, user: user, activity_type: activity_type, clock_in: 5.days.ago, clock_out: Time.current
+          create :activity_session, user: user, activity_type: activity_type, clock_in: 2.weeks.ago, clock_out: Time.current
+          get "/api/my/activities/#{activity_type}?from_last_week=yes", headers: headers
+
+          expect(response).to have_http_status(:ok)
+          expect(json["data"]).to be_an(Array)
+          expect(json["data"].size).to eq 1
+          expect(json["data"].first["attributes"]["clock-in"]).to be >= 1.week.ago.iso8601(3)
         end
       end
     end

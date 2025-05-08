@@ -60,5 +60,9 @@ group :development, :test do
   gem "factory_bot_rails" # https://github.com/thoughtbot/factory_bot_rails
   gem "faker" # https://github.com/faker-ruby/faker
 
+  # https://github.com/DatabaseCleaner/database_cleaner
+  gem "database_cleaner-active_record", "~> 2.2.0"
+  # gem "database_cleaner-redis", "~> 2.0.0"
+
   gem "dotenv", "3.1.8" # https://github.com/bkeepers/dotenv
 end
