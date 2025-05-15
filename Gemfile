@@ -67,7 +67,7 @@ group :development, :test do
   gem "faker" # https://github.com/faker-ruby/faker
 
   # https://github.com/DatabaseCleaner/database_cleaner
-  gem "database_cleaner-active_record", "~> 2.2.0"
+  gem "database_cleaner-active_record", "~> 2.2.1"
 
   gem "dotenv", "3.1.8" # https://github.com/bkeepers/dotenv
 end
