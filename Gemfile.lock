@@ -78,7 +78,7 @@ GEM
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
     ast (2.4.3)
-    base64 (0.2.0)
+    base64 (0.3.0)
     bcrypt (3.1.20)
     bcrypt_pbkdf (1.1.1)
     benchmark (0.4.0)
@@ -130,7 +130,7 @@ GEM
       reline (>= 0.4.2)
     json (2.11.3)
     jsonapi-renderer (0.2.2)
-    jwt (2.10.1)
+    jwt (3.0.0)
       base64
     kamal (2.6.1)
       activesupport (>= 7.0)
@@ -386,7 +386,7 @@ DEPENDENCIES
   dotenv (= 3.1.8)
   factory_bot_rails
   faker
-  jwt (~> 2.10.1)
+  jwt (~> 3.0.0)
   kamal
   kaminari
   pg (~> 1.1)
