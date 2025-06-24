@@ -44,7 +44,7 @@ gem "kaminari" # https://github.com/kaminari/kaminari
 gem "active_model_serializers", "~> 0.10.2"
 
 gem "bcrypt", "3.1.20" # https://github.com/bcrypt-ruby/bcrypt-ruby
-gem "jwt", "~> 2.10.1" # https://github.com/jwt/ruby-jwt
+gem "jwt", "~> 3.1.0" # https://github.com/jwt/ruby-jwt
 gem "strong_migrations", "~> 2.3.0" # https://github.com/ankane/strong_migrations
 gem "simple_command", "~> 1.0.1" # https://github.com/nebulab/simple_command
 
